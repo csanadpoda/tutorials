@@ -8,3 +8,7 @@ We take a look at what Transfer Learning is, how it works and how you can modify
 ### 2 - Classification
 
 We perform basic classification on some telco data: Some data cleaning and feature selection methods are demonstrated in addition to multiple models. We also check some methods on how to deal with an unbalanced dataset.
+
+### 3 - MNDWRK webinar [HUN]
+
+A spiced-up version of SKLearn's "Faces recognition example using eigenfaces and SVMs" tutorial, used for a webinar for MNDWRK. Additional explanation of steps in Hungarian.
