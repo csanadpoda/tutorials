@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatbot-app-deployment
+  labels:
+    app: chatbot-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chatbot-app
+  template:
+    metadata:
+      labels:
+        app: chatbot-app 
+    spec:
+      containers:
+      - name: chatbot-node-app
+        image: getronics_chatbot_fe
+        imagePullPolicy: IfNotPresent 
+        ports:
+        - containerPort: 3000
+      - name: chatbot-python-app
+        image: getronics_chatbot_be
+        imagePullPolicy: IfNotPresent 
+        ports:
+        - containerPort: 5000
+      restartPolicy: Always

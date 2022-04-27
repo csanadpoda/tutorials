@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: chatbot-node-app
+spec:
+  type: NodePort
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+      nodePort: 31000
+  selector:
+    app: chatbot-node-app
