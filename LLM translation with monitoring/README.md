@@ -87,7 +87,7 @@ This application allows users to translate text and CSV files into multiple lang
 2. In the web interface, select the **Translate CSV & Score** tab.
 
 3. Upload your CSV file.
-   > **Note**: [Example CSV's are provided in the solution folder.].
+   > **Note**: [Example CSV's are provided in the `data` folder.].
 
 4. Click **Translate and Evaluate** to perform translations and receive evaluation metrics.
 
