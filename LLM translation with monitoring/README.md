@@ -87,36 +87,6 @@ This application allows users to translate text and CSV files into multiple lang
 
 4. Click **Translate and Evaluate** to perform translations and receive evaluation metrics.
 
-## Evaluation Metrics
-
-     After translating the CSV file, the application computes several evaluation metrics to assess the quality of the translations. These metrics are displayed in a summary table and include:
-
-    ### BLEU (Bilingual Evaluation Understudy Score)**
-    Measures the correspondence between the machine's output and that of human translations by calculating n-gram overlaps.
-    Score Range: 0 to 100 (higher is better).
-    Interpretation: A higher BLEU score indicates a closer match to the reference translation.
-    
-    **ChrF (Character n-gram F-score)**
-    Evaluates translation quality based on character-level n-gram precision and recall, making it effective for morphologically rich languages.
-    Score Range: 0 to 100 (higher is better).
-    Interpretation: Higher ChrF scores suggest better translation quality at the character level.
-    
-    **ROUGE (Recall-Oriented Understudy for Gisting Evaluation)**
-
-    Measures the overlap between the machine translation and reference translation.
-    Metrics:
-    *ROUGE-1 F1*: Overlap of unigrams (individual words).
-    *ROUGE-2 F1*: Overlap of bigrams (two-word sequences).
-    *ROUGE-L F1*: Longest Common Subsequence, capturing sentence-level structure similarity.
-    Score Range: 0 to 100 (higher is better).
-    Interpretation: Higher ROUGE scores indicate better recall and precision in capturing relevant information.
-    
-    **BERTScore F1**
-
-    Uses contextual embeddings from BERT models to measure the semantic similarity between the machine translation and the reference.
-    Score Range: 0 to 100 (higher is better).
-    Interpretation: A higher BERTScore F1 means the translation is semantically closer to the reference translation.
-
 ### Monitoring
 
 - **Prometheus** is accessible at [http://localhost:9090](http://localhost:9090).
@@ -126,6 +96,36 @@ This application allows users to translate text and CSV files into multiple lang
     - **Password**: `admin`
 
 Use these interfaces to monitor translation performance and system metrics in real-time.
+
+## Evaluation Metrics
+
+After translating the CSV file, the application computes several evaluation metrics to assess the quality of the translations. These metrics are displayed in a summary table and include:
+
+### BLEU (Bilingual Evaluation Understudy Score)
+Measures the correspondence between the machine's output and that of human translations by calculating n-gram overlaps.
+*Score Range*: 0 to 100 (higher is better).
+*Interpretation*: A higher BLEU score indicates a closer match to the reference translation.
+
+### ChrF (Character n-gram F-score)
+Evaluates translation quality based on character-level n-gram precision and recall, making it effective for morphologically rich languages.
+*Score Range*: 0 to 100 (higher is better).
+*Interpretation*: Higher ChrF scores suggest better translation quality at the character level.
+
+### ROUGE (Recall-Oriented Understudy for Gisting Evaluation)
+
+Measures the overlap between the machine translation and reference translation.
+Metrics:
+**ROUGE-1 F1**: Overlap of unigrams (individual words).
+**ROUGE-2 F1**: Overlap of bigrams (two-word sequences).
+**ROUGE-L F1**: Longest Common Subsequence, capturing sentence-level structure similarity.
+*Score Range*: 0 to 100 (higher is better).
+*Interpretation*: Higher ROUGE scores indicate better recall and precision in capturing relevant information.
+
+### BERTScore F1
+
+Uses contextual embeddings from BERT models to measure the semantic similarity between the machine translation and the reference.
+*Score Range*: 0 to 100 (higher is better).
+*Interpretation*: A higher BERTScore F1 means the translation is semantically closer to the reference translation.
 
 ## Supported Languages
 
