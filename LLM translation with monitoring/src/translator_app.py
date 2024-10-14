@@ -16,14 +16,16 @@ from prometheus_client import Counter, Summary, start_http_server
 from prompt_utils import construct_prompt
 
 # Configure logging
-logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.ERROR,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Create Prometheus metrics
-TRANSLATE_TEXT_TIME = Summary('translate_text_processing_seconds', 
+TRANSLATE_TEXT_TIME = Summary('translate_text_processing_seconds',
                               'Time spent processing translate_text()')
-TRANSLATE_AND_SCORE_TIME = Summary('translate_and_score_processing_seconds', 
-                                   'Time spent processing translate_and_score()')
-TRANSLATION_ERRORS = Counter('translation_errors_total', 
+TRANSLATE_AND_SCORE_TIME = Summary('translate_and_score_processing_seconds',
+                                   'Time spent processing \
+                                    translate_and_score()')
+TRANSLATION_ERRORS = Counter('translation_errors_total',
                              'Total translation errors')
 start_http_server(8000, addr="0.0.0.0")
 
@@ -77,7 +79,7 @@ def initialize_openai_client():
         openai.api_key = os.getenv("OPENAI_API_KEY")
         return openai, os.getenv("OPENAI_MODEL")
 
-# Initialize the correct OpenAI client and model/deployment name based on 
+# Initialize the correct OpenAI client and model/deployment name based on
 # environment variables
 
 
@@ -94,9 +96,9 @@ def extract_placeholders(text: str) -> List[str]:
     return re.findall(r'\[.*?\]', text)
 
 
-def replace_translated_placeholders(source_text: str, 
+def replace_translated_placeholders(source_text: str,
                                     translated_text: str) -> str:
-    """Replace any translated placeholders in the translated text with the 
+    """Replace any translated placeholders in the translated text with the
     original placeholders."""
     source_placeholders = extract_placeholders(source_text)
     translated_placeholders = extract_placeholders(translated_text)
@@ -108,10 +110,10 @@ def replace_translated_placeholders(source_text: str,
     for ph in translated_placeholders:
         content = ph.strip()
         if content in placeholder_map:
-            translated_text = translated_text.replace(ph, 
+            translated_text = translated_text.replace(ph,
                                                       placeholder_map[content])
         else:
-            # If the placeholder content does not match, replace with original 
+            # If the placeholder content does not match, replace with original
             # placeholder
             translated_text = translated_text.replace(ph, ph)
 
@@ -181,9 +183,9 @@ def translate_and_score(
             google_translations = df['Google Translate'].tolist()
 
             # Compute BLEU and ChrF using sacrebleu
-            google_bleu = sacrebleu.corpus_bleu(google_translations, 
+            google_bleu = sacrebleu.corpus_bleu(google_translations,
                                                 [references])
-            google_chrf = sacrebleu.corpus_chrf(google_translations, 
+            google_chrf = sacrebleu.corpus_chrf(google_translations,
                                                 [references])
 
             # Compute ROUGE scores
@@ -281,7 +283,7 @@ with gr.Blocks(css="""
             elem_id="qa-pairs"
         )
         summary_df = gr.Dataframe(
-            headers=["Metric", "Original Translations", 
+            headers=["Metric", "Original Translations",
                      "Generated Translations"],
             interactive=False
         )
