@@ -1,6 +1,6 @@
 # LLM Translation App with Monitoring
 
-A Dockerized application for translating text using OpenAI's API with built-in monitoring through Prometheus and Grafana.
+A Dockerized application for translating text using (Azure) OpenAI's API with built-in monitoring through Prometheus and Grafana.
 
 ## Table of Contents
 
@@ -37,7 +37,7 @@ This application allows users to translate text and CSV files into multiple lang
 
 ## Installation
 
-1. **Clone the Repository or copy the folder**
+1. **Clone the Repository or Copy the Solution**
 
    Git:
    ```bash
@@ -45,7 +45,7 @@ This application allows users to translate text and CSV files into multiple lang
    cd "LLM translation with monitoring"
    ```
 
-   Or just copy and change into the directory on CMD.
+   Or just copy and change into the directory in CMD.
 
 2. **Set Up Environment Variables**
 
@@ -70,7 +70,7 @@ This application allows users to translate text and CSV files into multiple lang
 
 2. Select the **Translate Phrases** tab.
 
-3. Enter the text you wish to translate and select the target language from the dropdown. Use [] to add placeholders, like: [placeHolder].
+3. Enter the English text you wish to translate and select the target language from the dropdown. Use `[]` to add placeholders, like this: `[placeHolder]`.
 
 4. Click **Translate** to receive the translated text.
 
@@ -81,10 +81,13 @@ This application allows users to translate text and CSV files into multiple lang
    - `english`: The text in English.
    - `translated_value`: The reference translation in the target language.
    - (Optional) `Google Translate`: Translations from Google Translate for comparison.
+   
+   > **Note**: [`[placeHolders]` are also supported in this mode.].
 
 2. In the web interface, select the **Translate CSV & Score** tab.
 
 3. Upload your CSV file.
+   > **Note**: [Example CSV's are provided in the solution folder.].
 
 4. Click **Translate and Evaluate** to perform translations and receive evaluation metrics.
 
@@ -100,7 +103,7 @@ Use these interfaces to monitor translation performance and system metrics in re
 
 ## Evaluation Metrics
 
-After translating the CSV file, the application computes several evaluation metrics to assess the quality of the translations. These metrics are displayed in a summary table and include:
+When translating a CSV file, the application computes several evaluation metrics to assess the quality of the translations. These metrics are displayed in a summary table and include:
 
 ### BLEU (Bilingual Evaluation Understudy Score)
 Measures the correspondence between the machine's output and that of human translations by calculating n-gram overlaps.
