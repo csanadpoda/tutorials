@@ -23,37 +23,35 @@ This application allows users to translate text and CSV files into multiple lang
 
 ## Features
 
-- **Text Translation**: Translate individual phrases or sentences.
-- **CSV Translation and Scoring**: Upload CSV files for batch translation and receive evaluation metrics like BLEU, ROUGE, and BERTScore.
+- **Text Translation**: Translate individual phrases or sentences with [placeholder] support.
+- **CSV Translation and Evaluation**: Upload CSV files for batch translation and receive evaluation metrics like BLEU, ROUGE, and BERTScore.
 - **Monitoring**: Real-time monitoring of translation performance using Prometheus and Grafana.
 - **Dockerized Setup**: Easy deployment using Docker Compose.
 
 ## Prerequisites
 
-- **Docker** and **Docker Compose** installed on your system.
-- **NVIDIA GPU Drivers** (optional but recommended for better performance).
-- Access to the **OpenAI API** or **Azure OpenAI Service**.
-- **API Keys** for OpenAI or Azure OpenAI.
+- **Docker** (and **Docker Compose**) installed on your system.
+- **NVIDIA GPU Drivers** (optional but recommended for better evaluation performance).
+- Access to the **OpenAI API** or **Azure OpenAI Service** with **API Keys**.
 
 ## Installation
 
-1. **Clone the Repository**
+1. **Clone the Repository or copy the folder**
 
+  Git:
    ```bash
-   git clone https://github.com/yourusername/translation-app.git
-   cd translation-app
+   git clone https://github.com/csanadpoda/tutorials.git
+   cd "LLM translation with monitoring"
    ```
+
+  Or just copy and change into the directory on CMD.
 
 2. **Set Up Environment Variables**
 
-   Create a `.env` file in the root directory and add your API keys:
+   Create a `.env` file in the root directory and add your API keys. 
+   Template .env files are provided (`.env_azure_oai` and `.env_oai`) - add your credentials to the one you use and rename it to `.env`.
 
-   ```env
-   AZURE_OPENAI_API_KEY=your_azure_openai_api_key
-   AZURE_OPENAI_ENDPOINT=your_azure_openai_endpoint
-   ```
-
-   > **Note**: If you're using the standard OpenAI API, set `OPENAI_API_KEY` and `OPENAI_MODEL` instead.
+   > **Note**: The solution has been tested with Azure OpenAI only. Some code changes might thus be needed for OpenAI.
 
 3. **Build and Run the Docker Containers**
 
@@ -71,7 +69,7 @@ This application allows users to translate text and CSV files into multiple lang
 
 2. Select the **Translate Phrases** tab.
 
-3. Enter the text you wish to translate and select the target language from the dropdown.
+3. Enter the text you wish to translate and select the target language from the dropdown. Use [] to add placeholders, like: [placeHolder].
 
 4. Click **Translate** to receive the translated text.
 
@@ -85,9 +83,38 @@ This application allows users to translate text and CSV files into multiple lang
 
 2. In the web interface, select the **Translate CSV & Score** tab.
 
-3. Upload your CSV file and choose the target language.
+3. Upload your CSV file.
 
 4. Click **Translate and Evaluate** to perform translations and receive evaluation metrics.
+
+#### Evaluation Metrics
+    After translating the CSV file, the application computes several evaluation metrics to assess the quality of the translations. These metrics are displayed in a summary table and include:
+
+    **BLEU (Bilingual Evaluation Understudy Score)**
+    Measures the correspondence between the machine's output and that of human translations by calculating n-gram overlaps.
+    Score Range: 0 to 100 (higher is better).
+    Interpretation: A higher BLEU score indicates a closer match to the reference translation.
+    
+    **ChrF (Character n-gram F-score)**
+    Evaluates translation quality based on character-level n-gram precision and recall, making it effective for morphologically rich languages.
+    Score Range: 0 to 100 (higher is better).
+    Interpretation: Higher ChrF scores suggest better translation quality at the character level.
+    
+    **ROUGE (Recall-Oriented Understudy for Gisting Evaluation)**
+
+    Measures the overlap between the machine translation and reference translation.
+    Metrics:
+    *ROUGE-1 F1*: Overlap of unigrams (individual words).
+    *ROUGE-2 F1*: Overlap of bigrams (two-word sequences).
+    *ROUGE-L F1*: Longest Common Subsequence, capturing sentence-level structure similarity.
+    Score Range: 0 to 100 (higher is better).
+    Interpretation: Higher ROUGE scores indicate better recall and precision in capturing relevant information.
+    
+    **BERTScore F1**
+
+    Uses contextual embeddings from BERT models to measure the semantic similarity between the machine translation and the reference.
+    Score Range: 0 to 100 (higher is better).
+    Interpretation: A higher BERTScore F1 means the translation is semantically closer to the reference translation.
 
 ### Monitoring
 
@@ -109,24 +136,6 @@ Use these interfaces to monitor translation performance and system metrics in re
 - Japanese
 - Portuguese
 - Spanish
-
-## Environment Variables
-
-Set the following environment variables in your `.env` file:
-
-- **For Azure OpenAI Service**:
-
-  ```env
-  AZURE_OPENAI_API_KEY=your_azure_openai_api_key
-  AZURE_OPENAI_ENDPOINT=your_azure_openai_endpoint
-  ```
-
-- **For OpenAI API**:
-
-  ```env
-  OPENAI_API_KEY=your_openai_api_key
-  OPENAI_MODEL=your_openai_model
-  ```
 
 ## Contributing
 

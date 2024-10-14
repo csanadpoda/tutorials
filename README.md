@@ -22,3 +22,7 @@ We perform basic classification on some telco data: Some data cleaning and featu
 ### 4- MNDWRK webinar [HUN]
 
 A spiced-up version of SKLearn's "Faces recognition example using eigenfaces and SVMs" tutorial, used for a webinar for MNDWRK. Additional explanation of steps in Hungarian.
+
+### 5- LLM translation with monitoring [HUN]
+
+Using OpenAI's API to create a multi-language translation tool with placeholder support. Using Gradio for UI, Prometheus for monitoring and Grafana for visualization of said monitoring. All packaged into Docker with optional GPU support for translation evaluation metrics.
