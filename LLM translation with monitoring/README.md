@@ -14,7 +14,6 @@ A Dockerized application for translating text using (Azure) OpenAI's API with bu
   - [Monitoring](#monitoring)
 - [Evaluation Metrics](#evaluation-metrics)
 - [Supported Languages](#supported-languages)
-- [Environment Variables](#environment-variables)
 - [Contributing](#contributing)
 - [License](#license)
 
