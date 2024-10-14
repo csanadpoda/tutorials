@@ -50,7 +50,7 @@ This application allows users to translate text and CSV files into multiple lang
 2. **Set Up Environment Variables**
 
    Create a `.env` file in the root directory and add your API keys. 
-   Template .env files are provided (`.env_azure_oai` and `.env_oai`) - add your credentials to the one you use and rename it to `.env`.
+   Template `.env` files are provided (`.env_azure_oai` and `.env_oai`) - add your credentials to the one you use and rename it to `.env`.
 
    > **Note**: The solution has been tested with Azure OpenAI only. Some code changes might thus be needed for OpenAI.
 
