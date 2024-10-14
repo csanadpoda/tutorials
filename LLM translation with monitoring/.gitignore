@@ -1,0 +1,39 @@
+# Byte-compiled Python files
+__pycache__/
+*.pyc
+
+# Environment variables file
+.env
+
+# Virtual environment directories
+venv/
+.env/
+
+# Docker-related files
+docker-compose.override.yml
+*.log
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# MacOS specific files
+.DS_Store
+
+# Prometheus and Grafana data directories (if persisted)
+prometheus_data/
+grafana_data/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*~
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Ignore any files starting with a dot except .gitignore
+.*
+!.gitignore
