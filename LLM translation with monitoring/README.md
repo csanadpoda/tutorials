@@ -38,13 +38,13 @@ This application allows users to translate text and CSV files into multiple lang
 
 1. **Clone the Repository or copy the folder**
 
-  Git:
+   Git:
    ```bash
    git clone https://github.com/csanadpoda/tutorials.git
    cd "LLM translation with monitoring"
    ```
 
-  Or just copy and change into the directory on CMD.
+   Or just copy and change into the directory on CMD.
 
 2. **Set Up Environment Variables**
 
@@ -87,10 +87,11 @@ This application allows users to translate text and CSV files into multiple lang
 
 4. Click **Translate and Evaluate** to perform translations and receive evaluation metrics.
 
-#### Evaluation Metrics
-    After translating the CSV file, the application computes several evaluation metrics to assess the quality of the translations. These metrics are displayed in a summary table and include:
+## Evaluation Metrics
 
-    **BLEU (Bilingual Evaluation Understudy Score)**
+     After translating the CSV file, the application computes several evaluation metrics to assess the quality of the translations. These metrics are displayed in a summary table and include:
+
+    ### BLEU (Bilingual Evaluation Understudy Score)**
     Measures the correspondence between the machine's output and that of human translations by calculating n-gram overlaps.
     Score Range: 0 to 100 (higher is better).
     Interpretation: A higher BLEU score indicates a closer match to the reference translation.
