@@ -1,24 +1,30 @@
+import logging
 import os
 import re
-from typing import Tuple, List
-import logging
+from typing import List, Tuple
 
-import pandas as pd
-import torch
 import gradio as gr
+import openai
+import pandas as pd
+import sacrebleu
+import torch
 from bert_score import score as bert_score
 from dotenv import load_dotenv
-import openai
-
 from rouge import Rouge
-import sacrebleu
-from prometheus_client import start_http_server, Summary, Counter
+from prometheus_client import Counter, Summary, start_http_server
+
 from prompt_utils import construct_prompt
 
-# Create metrics
-TRANSLATE_TEXT_TIME = Summary('translate_text_processing_seconds', 'Time spent processing translate_text()')
-TRANSLATE_AND_SCORE_TIME = Summary('translate_and_score_processing_seconds', 'Time spent processing translate_and_score()')
-TRANSLATION_ERRORS = Counter('translation_errors_total', 'Total translation errors')
+# Configure logging
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Create Prometheus metrics
+TRANSLATE_TEXT_TIME = Summary('translate_text_processing_seconds', 
+                              'Time spent processing translate_text()')
+TRANSLATE_AND_SCORE_TIME = Summary('translate_and_score_processing_seconds', 
+                                   'Time spent processing translate_and_score()')
+TRANSLATION_ERRORS = Counter('translation_errors_total', 
+                             'Total translation errors')
 start_http_server(8000, addr="0.0.0.0")
 
 # Load environment variables
@@ -37,9 +43,9 @@ if torch.cuda.is_available():
     )
 else:
     device_info = (
-        f"**Device Information:**\n"
-        f"- **CUDA Available:** No\n"
-        f"- **Using CPU**"
+        "**Device Information:**\n"
+        "- **CUDA Available:** No\n"
+        "- **Using CPU**"
     )
 
 # Language options for multi-language translation tab
@@ -54,9 +60,13 @@ language_options = {
     "Spanish": "es",
 }
 
+
 def initialize_openai_client():
-    if os.getenv("AZURE_OPENAI_API_KEY") and os.getenv("AZURE_OPENAI_ENDPOINT"):
-        # Initialize Azure OpenAI if Azure-specific keys are found
+    """Initialize OpenAI client"""
+    if (
+        os.getenv("AZURE_OPENAI_API_KEY") and
+        os.getenv("AZURE_OPENAI_ENDPOINT")
+    ):
         return openai.AzureOpenAI(
             azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
             api_key=os.getenv("AZURE_OPENAI_API_KEY"),
@@ -67,19 +77,27 @@ def initialize_openai_client():
         openai.api_key = os.getenv("OPENAI_API_KEY")
         return openai, os.getenv("OPENAI_MODEL")
 
-# Initialize the correct OpenAI client and model/deployment name based on environment variables
+# Initialize the correct OpenAI client and model/deployment name based on 
+# environment variables
+
+
 oai_client, model_name = initialize_openai_client()
+
 
 def preprocess(text: str) -> str:
     """Lowercase and remove extra whitespace from the text."""
     return ' '.join(text.lower().split())
 
+
 def extract_placeholders(text: str) -> List[str]:
     """Extract placeholders enclosed in square brackets."""
     return re.findall(r'\[.*?\]', text)
 
-def replace_translated_placeholders(source_text: str, translated_text: str) -> str:
-    """Replace any translated placeholders in the translated text with the original placeholders."""
+
+def replace_translated_placeholders(source_text: str, 
+                                    translated_text: str) -> str:
+    """Replace any translated placeholders in the translated text with the 
+    original placeholders."""
     source_placeholders = extract_placeholders(source_text)
     translated_placeholders = extract_placeholders(translated_text)
 
@@ -90,16 +108,20 @@ def replace_translated_placeholders(source_text: str, translated_text: str) -> s
     for ph in translated_placeholders:
         content = ph.strip()
         if content in placeholder_map:
-            translated_text = translated_text.replace(ph, placeholder_map[content])
+            translated_text = translated_text.replace(ph, 
+                                                      placeholder_map[content])
         else:
-            # If the placeholder content does not match, replace with original placeholder
+            # If the placeholder content does not match, replace with original 
+            # placeholder
             translated_text = translated_text.replace(ph, ph)
 
     return translated_text
 
+
 @TRANSLATE_TEXT_TIME.time()
 def translate_text(input_text: str, target_language: str) -> str:
     """Translate the input text to the target language using OpenAI API."""
+    response = None
     try:
         system_prompt = construct_prompt("", target_language)
         messages = [
@@ -121,15 +143,13 @@ def translate_text(input_text: str, target_language: str) -> str:
         logging.error(f"Endpoint returned: {response}")
         raise e
 
-def tokenize_text(text: str, language_code: str) -> List[str]:
-    """Tokenize text based on the language code using sacrebleu's tokenizer."""
-    return sacrebleu.tokenizers.TokenizerV14International().tokenize(text).split()
 
 @TRANSLATE_AND_SCORE_TIME.time()
 def translate_and_score(
     file, target_language: str = 'Hungarian'
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Translate and evaluate translations from a CSV file."""
+    translations = None
     try:
         df = pd.read_csv(file.name)
         translations = []
@@ -150,7 +170,8 @@ def translate_and_score(
         model_translations = df['translated_by_model'].tolist()
 
         summary_data = {
-            'Metric': ['BLEU', 'CHRF', 'ROUGE-1 F1', 'ROUGE-2 F1', 'ROUGE-L F1', 'BERTScore F1'],
+            'Metric': ['BLEU', 'CHRF', 'ROUGE-1 F1', 'ROUGE-2 F1',
+                       'ROUGE-L F1', 'BERTScore F1'],
             'Model Translations': [],
         }
 
@@ -160,8 +181,10 @@ def translate_and_score(
             google_translations = df['Google Translate'].tolist()
 
             # Compute BLEU and ChrF using sacrebleu
-            google_bleu = sacrebleu.corpus_bleu(google_translations, [references])
-            google_chrf = sacrebleu.corpus_chrf(google_translations, [references])
+            google_bleu = sacrebleu.corpus_bleu(google_translations, 
+                                                [references])
+            google_chrf = sacrebleu.corpus_chrf(google_translations, 
+                                                [references])
 
             # Compute ROUGE scores
             google_rouge_scores = Rouge().get_scores(
@@ -226,6 +249,7 @@ def translate_and_score(
         logging.error(f"Translations: {translations}")
         raise e
 
+
 with gr.Blocks(css="""
     .qa-pairs .table-wrap {
         max-height: 400px;
@@ -251,24 +275,20 @@ with gr.Blocks(css="""
     with gr.Tab("Translate CSV & Score"):
         gr.Markdown(device_info)
         file = gr.File(label="Upload CSV")
-        target_language_csv = gr.Dropdown(
-            list(language_options.keys()),
-            label="Target Language",
-            value='Hungarian'
-        )
         output_df = gr.Dataframe(
-            headers=["hungarian", "translated_value", "translated_by_model"],
+            headers=["english", "translated_value", "translated_by_model"],
             interactive=False,
             elem_id="qa-pairs"
         )
         summary_df = gr.Dataframe(
-            headers=["Metric", "Original Translations", "Generated Translations"],
+            headers=["Metric", "Original Translations", 
+                     "Generated Translations"],
             interactive=False
         )
         score_button = gr.Button("Translate and Evaluate")
         score_button.click(
             translate_and_score,
-            inputs=[file, target_language_csv],
+            inputs=[file],
             outputs=[output_df, summary_df]
         )
 

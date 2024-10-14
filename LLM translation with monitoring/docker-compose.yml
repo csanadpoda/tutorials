@@ -3,11 +3,14 @@ services:
     build: .
     ports:
       - "7860:7860"
-    environment:
-      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
-      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
     networks:
       - monitoring
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    runtime: nvidia
 
   prometheus:
     image: prom/prometheus:latest
